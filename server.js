@@ -21,8 +21,30 @@ app.get('/songs', function(req, res) {
 
 app.post('/songs', function(req, res) {
   console.log('req.body', req.body);
-  songs.push(req.body);
-  res.sendStatus(200);
-})
 
+  if (!isValidSong(req.body)) {
+    res.status(400).send('invalid song');
+  }
+  else if (isDuplicate(req.body)) {
+    res.status(400).send('duplicate song');
+
+  } else {
+    req.body.dateAdded = new Date();
+    songs.push(req.body);
+    res.sendStatus(200);
+  }
+});
+function isValidSong(newSong) {
+  return newSong.title.trim() && newSong.artist && newSong.album;
+
+}
+// do not allow duplicate songs
+function isDuplicate(newSong){
+  return songs.some(function(song)  {
+    return song.title === newSong.title &&
+    song.artist === newSong.artist &&
+    song.album === newSong.album;
+  });
+
+}//Dpmt a;;pw tje iser tp add spmgs wotj a b;aml srjtist or title
 app.listen(3000);

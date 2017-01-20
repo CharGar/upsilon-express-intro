@@ -27,7 +27,8 @@ function addSong(event) {
     url: '/songs',
     type: 'POST',
     data: songData,
-    success: getSongs
+    success: getSongs,
+    error: displayError
   })
 }
 
@@ -37,7 +38,16 @@ function displaySongs(songs) {
   $('#songs').empty();
 
   songs.forEach(function(song) {
+var addedOn = 'unKnown';
+      if (song.dateAdded) {
+        addedOn = new Date(song.dateAdded).toDateString();
+      }
     $('#songs').append('<li>' + song.title + ' by '
-      + song.artist + ' from album ' + song.album + '</li>');
+      + song.artist + ' from album ' + song.album + ' added on '+ addedOn + ' </li>');
   });
+}
+function dusplayError(response) {
+  console.log('error response', response);
+  $)'#error').empty();
+  $('#error').append('Could not add song: ' + response.responseText);
 }
